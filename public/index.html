@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creed Web Designs — Voice Agent Dashboard</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#1a1a2e;color:#e0e0e0;min-height:100vh}
+header{background:#16213e;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #0f3460}
+header h1{font-size:1.3rem;color:#e94560}
+header .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+header .status-dot.online{background:#00c853}
+nav{display:flex;gap:2px;background:#0f3460;padding:0 24px}
+nav button{padding:12px 20px;background:none;border:none;color:#a0a0b0;cursor:pointer;font-size:.9rem;border-bottom:2px solid transparent;transition:all .2s}
+nav button:hover{color:#fff;background:rgba(255,255,255,.05)}
+nav button.active{color:#e94560;border-bottom-color:#e94560}
+main{padding:24px}
+.tab{display:none}
+.tab.active{display:block}
+.card{background:#16213e;border-radius:8px;padding:20px;margin-bottom:16px;border:1px solid #0f3460}
+.card h3{margin-bottom:12px;color:#e94560;font-size:1rem}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #0f3460;font-size:.85rem}
+th{background:#0f3460;color:#a0a0b0;font-weight:600}
+tr:hover{background:rgba(233,69,96,.05);cursor:pointer}
+.badge{padding:3px 8px;border-radius:12px;font-size:.75rem;font-weight:600;white-space:nowrap}
+.badge-new{background:#1976d2;color:#fff}
+.badge-contacted{background:#f9a825;color:#000}
+.badge-interested{background:#00c853;color:#000}
+.badge-meeting_booked{background:#7c4dff;color:#fff}
+.badge-closed{background:#00c853;color:#000;font-weight:700}
+.badge-declined{background:#d32f2f;color:#fff}
+.badge-do_not_call{background:#880e4f;color:#fff}
+.badge-callback_scheduled{background:#ef6c00;color:#fff}
+.btn{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s}
+.btn-primary{background:#e94560;color:#fff}
+.btn-primary:hover{background:#d63851}
+.btn-green{background:#00c853;color:#000}
+.btn-green:hover{background:#00a844}
+.btn-red{background:#d32f2f;color:#fff}
+.btn-red:hover{background:#b71c1c}
+.btn-outline{background:transparent;border:1px solid #0f3460;color:#a0a0b0}
+.btn-outline:hover{border-color:#e94560;color:#e94560}
+.btn-sm{padding:4px 10px;font-size:.75rem}
+input,select,textarea{background:#1a1a2e;border:1px solid #0f3460;color:#e0e0e0;padding:8px 12px;border-radius:6px;font-size:.85rem;width:100%;margin-bottom:8px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#e94560}
+label{display:block;font-size:.8rem;color:#a0a0b0;margin-bottom:4px}
+.form-row{display:flex;gap:12px}
+.form-row>*{flex:1}
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-bar select{width:auto;min-width:160px;margin-bottom:0}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:20px}
+.metric-card{background:#16213e;border-radius:8px;padding:16px;text-align:center;border:1px solid #0f3460}
+.metric-value{font-size:1.8rem;font-weight:700;color:#e94560}
+.metric-label{font-size:.8rem;color:#a0a0b0;margin-top:4px}
+.status-indicator{display:flex;align-items:center;gap:6px;font-size:.85rem}
+.status-indicator .dot{width:10px;height:10px;border-radius:50%}
+.dot-ok{background:#00c853}.dot-err{background:#d32f2f}
+.call-log{max-height:400px;overflow-y:auto}
+.call-log-entry{padding:8px 12px;border-bottom:1px solid #0f3460;font-size:.85rem}
+.call-log-entry .time{color:#a0a0b0;font-size:.75rem}
+.progress-bar{height:6px;background:#0f3460;border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:#e94560;transition:width .5s}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex}
+.modal{background:#16213e;border:1px solid #0f3460;border-radius:12px;padding:24px;min-width:400px;max-width:600px;max-height:80vh;overflow-y:auto}
+.lead-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lead-detail-grid .full{grid-column:1/-1}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Creed Web Designs</h1>
+    <span style="font-size:.8rem;color:#a0a0b0">Voice Agent Dashboard</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <span style="font-size:.8rem"><span class="status-dot online"></span> Server Online</span>
+  </div>
+</header>
+
+<nav id="nav">
+  <button data-tab="leads" class="active">Leads</button>
+  <button data-tab="campaign">Campaign</button>
+  <button data-tab="call">Manual Call</button>
+  <button data-tab="settings">Settings</button>
+  <button data-tab="costs">Costs</button>
+</nav>
+
+<main>
+  <!-- ====== LEADS TAB ====== -->
+  <div id="tab-leads" class="tab active">
+    <div class="filter-bar">
+      <button class="btn btn-outline btn-sm filter-btn active" data-filter="all">All</button>
+      <button class="btn btn-outline btn-sm filter-btn" data-filter="new">New</button>
+      <button class="btn btn-outline btn-sm filter-btn" data-filter="contacted">Contacted</button>
+      <button class="btn btn-outline btn-sm filter-btn" data-filter="interested">Interested</button>
+      <button class="btn btn-outline btn-sm filter-btn" data-filter="meeting_booked">Meeting Booked</button>
+      <select id="trade-filter"><option value="">All Trades</option></select>
+      <span style="flex:1"></span>
+      <button class="btn btn-primary btn-sm" onclick="showAddLeadForm()">+ Add Lead</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('csv-upload').click()">Import CSV</button>
+      <input type="file" id="csv-upload" accept=".csv" style="display:none" onchange="importCSV(this)">
+      <button class="btn btn-outline btn-sm" id="seed-btn" onclick="seedLeads()">Seed Test Data</button>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Business</th><th>Owner</th><th>Trade</th><th>City</th><th>State</th><th>Status</th><th>Calls</th><th>Last Call</th></tr></thead>
+        <tbody id="leads-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ====== CAMPAIGN TAB ====== -->
+  <div id="tab-campaign" class="tab">
+    <div class="filter-bar">
+      <input id="campaign-name" placeholder="Campaign Name" style="width:200px;margin-bottom:0">
+      <select id="campaign-trade" style="width:160px;margin-bottom:0"><option value="">All Trades</option></select>
+      <button class="btn btn-green btn-sm" id="campaign-start" onclick="startCampaign()">Start Campaign</button>
+      <button class="btn btn-red btn-sm" id="campaign-stop" onclick="stopCampaign()" disabled>Stop</button>
+    </div>
+    <div class="metrics" id="campaign-metrics">
+      <div class="metric-card"><div class="metric-value" id="cm-name">-</div><div class="metric-label">Campaign</div></div>
+      <div class="metric-card"><div class="metric-value" id="cm-total">0</div><div class="metric-label">Total Leads</div></div>
+      <div class="metric-card"><div class="metric-value" id="cm-called">0</div><div class="metric-label">Called</div></div>
+      <div class="metric-card"><div class="metric-value" id="cm-remaining">0</div><div class="metric-label">Remaining</div></div>
+      <div class="metric-card"><div class="metric-value" id="cm-status" style="font-size:1rem">Inactive</div><div class="metric-label">Status</div></div>
+    </div>
+    <div class="progress-bar" style="margin-bottom:16px"><div class="progress-fill" id="campaign-progress" style="width:0%"></div></div>
+    <div class="card"><h3>Call Log</h3><div class="call-log" id="call-log"><div class="call-log-entry">No calls logged yet.</div></div></div>
+  </div>
+
+  <!-- ====== MANUAL CALL TAB ====== -->
+  <div id="tab-call" class="tab">
+    <div class="card">
+      <h3>Manual Single Call</h3>
+      <div class="form-row">
+        <select id="call-lead-select" style="margin-bottom:0"><option value="">Select lead...</option></select>
+        <input id="call-phone" placeholder="Or enter phone number" style="margin-bottom:0">
+      </div>
+      <div class="form-row" style="margin-top:8px">
+        <select id="call-type" style="width:auto;margin-bottom:0">
+          <option value="cold_call">Cold Call</option>
+          <option value="follow_up">Follow Up</option>
+          <option value="voicemail">Voicemail</option>
+        </select>
+        <input id="call-lead-name" placeholder="Owner name (if not from lead)" style="margin-bottom:0">
+        <select id="call-trade" style="width:auto;margin-bottom:0"><option value="other">Other</option></select>
+      </div>
+      <button class="btn btn-primary" onclick="manualCall()" style="margin-top:12px">Call Now</button>
+    </div>
+    <div class="card" id="active-call-display" style="display:none">
+      <h3>Active Call</h3>
+      <div class="lead-detail-grid">
+        <div><strong>Lead:</strong> <span id="ac-name">-</span></div>
+        <div><strong>Call ID:</strong> <span id="ac-id">-</span></div>
+        <div><strong>Type:</strong> <span id="ac-type">-</span></div>
+        <div><strong>Duration:</strong> <span id="ac-duration">0:00</span></div>
+        <div><strong>Est. Cost:</strong> <span id="ac-cost">-</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SETTINGS TAB ====== -->
+  <div id="tab-settings" class="tab">
+    <div class="card"><h3>Agency Settings</h3>
+      <div id="agency-config"></div>
+    </div>
+    <div class="card"><h3>API Key Status</h3>
+      <div id="apikey-status"></div>
+    </div>
+    <div class="card"><h3>Connection Tests</h3>
+      <div id="connection-tests"></div>
+    </div>
+    <div class="card"><h3>URLs</h3>
+      <div id="urls-display"></div>
+    </div>
+  </div>
+
+  <!-- ====== COSTS TAB ====== -->
+  <div id="tab-costs" class="tab">
+    <div class="metrics">
+      <div class="metric-card"><div class="metric-value" id="cost-today">$0.00</div><div class="metric-label">Today's Cost</div></div>
+      <div class="metric-card"><div class="metric-value" id="cost-total">$0.00</div><div class="metric-label">Total Cost</div></div>
+      <div class="metric-card"><div class="metric-value" id="cost-today-calls">0</div><div class="metric-label">Today's Calls</div></div>
+      <div class="metric-card"><div class="metric-value" id="cost-total-calls">0</div><div class="metric-label">Total Calls</div></div>
+    </div>
+    <div class="card"><h3>Cost Breakdown</h3>
+      <table>
+        <thead><tr><th>Service</th><th>Est. Rate</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Vapi</td><td>$0.05/min</td><td>Platform + telephony</td></tr>
+          <tr><td>DeepSeek</td><td>$0.01/min</td><td>LLM inference</td></tr>
+          <tr><td>ElevenLabs</td><td>$0.05/min</td><td>Text-to-speech</td></tr>
+          <tr><td>Deepgram</td><td>$0.01/min</td><td>Speech-to-text</td></tr>
+          <tr><td>Twilio</td><td>$0.02/min</td><td>Outbound calling</td></tr>
+          <tr style="font-weight:700"><td>Total</td><td>~$0.14/min</td><td>~$0.84 per 6-min call</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="lead-modal">
+  <div class="modal" id="lead-modal-content"></div>
+</div>
+
+<script>
+const API = '';
+function api(path, opts = {}) { return fetch(API + path, opts).then(r => r.json()); }
+
+// ========== NAVIGATION ==========
+document.querySelectorAll('#nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ========== LEADS TAB ==========
+let leadsCache = [];
+const TRADES = ['plumber','electrician','hvac','roofer','landscaper','general_contractor','other'];
+const STATUSES = ['new','contacted','interested','meeting_booked','closed','declined','do_not_call','callback_scheduled'];
+let currentFilter = 'all';
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderLeads();
+  });
+});
+document.getElementById('trade-filter').addEventListener('change', renderLeads);
+
+function initTradeFilters() {
+  const sel = '<option value="">All Trades</option>' + TRADES.map(t => `<option value="${t}">${t.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}</option>`).join('');
+  document.getElementById('trade-filter').innerHTML = sel;
+  document.getElementById('campaign-trade').innerHTML = '<option value="">All Trades</option>' + TRADES.map(t => `<option value="${t}">${t.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}</option>`).join('');
+  document.getElementById('call-trade').innerHTML = TRADES.map(t => `<option value="${t}">${t.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}</option>`).join('');
+}
+
+async function loadLeads() {
+  const data = await api('/api/leads');
+  leadsCache = data.leads || [];
+  renderLeads();
+  populateLeadSelect();
+}
+
+function renderLeads() {
+  let leads = leadsCache;
+  if (currentFilter !== 'all') leads = leads.filter(l => l.status === currentFilter);
+  const tradeFilter = document.getElementById('trade-filter').value;
+  if (tradeFilter) leads = leads.filter(l => l.trade === tradeFilter);
+
+  const tbody = document.getElementById('leads-table');
+  if (!leads.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#a0a0b0;padding:20px">No leads found</td></tr>'; return; }
+
+  tbody.innerHTML = leads.map(l => `
+    <tr onclick="showLeadDetail('${l.id}')">
+      <td>${esc(l.businessName)}</td><td>${esc(l.ownerName)}</td>
+      <td>${esc(l.trade)}</td><td>${esc(l.city)}</td><td>${esc(l.state)}</td>
+      <td><span class="badge badge-${l.status}">${l.status.replace(/_/g,' ')}</span></td>
+      <td>${l.callCount}</td><td>${l.lastCallDate ? new Date(l.lastCallDate).toLocaleDateString() : '-'}</td>
+    </tr>`).join('');
+}
+
+function esc(s) { const d=document.createElement('div');d.textContent=s||'';return d.innerHTML; }
+
+function showLeadDetail(id) {
+  const lead = leadsCache.find(l => l.id === id);
+  if (!lead) return;
+  document.getElementById('lead-modal-content').innerHTML = `
+    <h3>${esc(lead.businessName)}</h3>
+    <div class="lead-detail-grid">
+      <div><strong>Owner:</strong> ${esc(lead.ownerName)}</div>
+      <div><strong>Trade:</strong> ${esc(lead.trade)}</div>
+      <div><strong>Phone:</strong> ${esc(lead.phoneNumber)}</div>
+      <div><strong>Email:</strong> ${esc(lead.email)}</div>
+      <div><strong>City:</strong> ${esc(lead.city)}, ${esc(lead.state)}</div>
+      <div><strong>Status:</strong> <span class="badge badge-${lead.status}">${lead.status.replace(/_/g,' ')}</span></div>
+      <div><strong>Calls:</strong> ${lead.callCount}</div>
+      <div><strong>Source:</strong> ${esc(lead.source)}</div>
+      <div class="full"><strong>Website:</strong> ${lead.hasWebsite ? esc(lead.websiteUrl||'Yes') : 'No'}</div>
+      ${lead.googleReviewCount ? `<div><strong>Reviews:</strong> ${lead.googleReviewCount} (${lead.googleRating}★)</div>` : ''}
+      <div><strong>Timezone:</strong> ${esc(lead.timezone)}</div>
+      <div><strong>Last Call:</strong> ${lead.lastCallDate||'Never'}</div>
+      <div class="full"><strong>Notes:</strong> <textarea id="lead-notes-edit" style="margin-top:4px">${esc(lead.notes||'')}</textarea></div>
+      <div class="full">
+        <label>Status:</label>
+        <select id="lead-status-edit">${STATUSES.map(s => `<option value="${s}" ${lead.status===s?'selected':''}>${s.replace(/_/g,' ')}</option>`).join('')}</select>
+        <button class="btn btn-primary btn-sm" onclick="saveLeadEdit('${lead.id}')" style="margin-top:8px">Save Changes</button>
+        <button class="btn btn-outline btn-sm" onclick="closeModal()" style="margin-top:8px">Close</button>
+      </div>
+    </div>`;
+  document.getElementById('lead-modal').classList.add('show');
+}
+
+function closeModal() { document.getElementById('lead-modal').classList.remove('show'); }
+document.getElementById('lead-modal').addEventListener('click', e => { if (e.target === document.getElementById('lead-modal')) closeModal(); });
+
+async function saveLeadEdit(id) {
+  const status = document.getElementById('lead-status-edit').value;
+  const notes = document.getElementById('lead-notes-edit').value;
+  await api('/api/leads/' + id, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({status, notes}) });
+  closeModal();
+  loadLeads();
+}
+
+function showAddLeadForm() {
+  document.getElementById('lead-modal-content').innerHTML = `
+    <h3>Add Lead</h3>
+    <div class="lead-detail-grid">
+      <div><label>Business Name *</label><input id="al-name"></div>
+      <div><label>Owner Name *</label><input id="al-owner"></div>
+      <div><label>Trade</label><select id="al-trade">${TRADES.map(t=>`<option value="${t}">${t.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}</option>`).join('')}</select></div>
+      <div><label>Phone *</label><input id="al-phone"></div>
+      <div><label>Email</label><input id="al-email"></div>
+      <div><label>City</label><input id="al-city"></div>
+      <div><label>State</label><input id="al-state" placeholder="TX"></div>
+      <div><label>Source</label><select id="al-source"><option value="manual">Manual</option><option value="google_maps">Google Maps</option><option value="yelp">Yelp</option><option value="referral">Referral</option></select></div>
+      <div class="full"><label>Notes</label><textarea id="al-notes"></textarea></div>
+      <div class="full">
+        <button class="btn btn-primary" onclick="addLead()">Save Lead</button>
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>`;
+  document.getElementById('lead-modal').classList.add('show');
+}
+
+async function addLead() {
+  const body = {
+    businessName: document.getElementById('al-name').value,
+    ownerName: document.getElementById('al-owner').value,
+    trade: document.getElementById('al-trade').value,
+    phoneNumber: document.getElementById('al-phone').value,
+    email: document.getElementById('al-email').value,
+    city: document.getElementById('al-city').value,
+    state: document.getElementById('al-state').value,
+    source: document.getElementById('al-source').value,
+    notes: document.getElementById('al-notes').value
+  };
+  if (!body.businessName || !body.phoneNumber) { alert('Business Name and Phone are required'); return; }
+  await api('/api/leads', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  closeModal();
+  loadLeads();
+}
+
+async function importCSV(input) {
+  if (!input.files[0]) return;
+  const form = new FormData();
+  form.append('file', input.files[0]);
+  const resp = await fetch(API + '/api/leads/import', { method:'POST', body:form });
+  const data = await resp.json();
+  alert(data.message || data.error || 'Import complete');
+  input.value = '';
+  loadLeads();
+}
+
+async function seedLeads() {
+  document.getElementById('seed-btn').disabled = true;
+  const data = await api('/api/leads/seed', { method:'POST' });
+  alert(data.message || 'Seeded');
+  document.getElementById('seed-btn').disabled = false;
+  loadLeads();
+}
+
+// ========== CAMPAIGN TAB ==========
+let campaignPollInterval;
+
+async function loadCampaignStatus() {
+  const data = await api('/api/campaign/status');
+  document.getElementById('cm-name').textContent = data.name || '-';
+  document.getElementById('cm-total').textContent = data.totalLeads ?? 0;
+  document.getElementById('cm-called').textContent = data.called ?? 0;
+  document.getElementById('cm-remaining').textContent = data.remaining ?? 0;
+  const active = data.active;
+  document.getElementById('cm-status').textContent = active ? 'ACTIVE' : (data.message === 'No campaign has been started.' ? 'Never Started' : 'Inactive');
+  document.getElementById('cm-status').style.color = active ? '#00c853' : '#a0a0b0';
+  const pct = data.totalLeads > 0 ? Math.round((data.called||0) / data.totalLeads * 100) : 0;
+  document.getElementById('campaign-progress').style.width = pct + '%';
+  document.getElementById('campaign-start').disabled = active;
+  document.getElementById('campaign-stop').disabled = !active;
+
+  if (active) {
+    if (!campaignPollInterval) campaignPollInterval = setInterval(loadCampaignStatus, 5000);
+  } else {
+    if (campaignPollInterval) { clearInterval(campaignPollInterval); campaignPollInterval = null; }
+  }
+}
+
+async function startCampaign() {
+  const name = document.getElementById('campaign-name').value || 'Campaign ' + new Date().toLocaleDateString();
+  const trade = document.getElementById('campaign-trade').value || undefined;
+  const data = await api('/api/campaign/start', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name, trade}) });
+  if (data.error) { alert(data.error); return; }
+  loadCampaignStatus();
+}
+
+async function stopCampaign() {
+  await api('/api/campaign/stop', { method:'POST' });
+  loadCampaignStatus();
+}
+
+// ========== MANUAL CALL TAB ==========
+function populateLeadSelect() {
+  const sel = document.getElementById('call-lead-select');
+  sel.innerHTML = '<option value="">Select lead...</option>' + leadsCache.map(l => `<option value="${l.id}" data-phone="${esc(l.phoneNumber)}" data-name="${esc(l.ownerName)}" data-trade="${esc(l.trade)}">${esc(l.businessName)} — ${esc(l.ownerName)}</option>`).join('');
+  sel.addEventListener('change', function() {
+    const opt = this.selectedOptions[0];
+    if (opt && opt.dataset.phone) {
+      document.getElementById('call-phone').value = opt.dataset.phone;
+      document.getElementById('call-lead-name').value = opt.dataset.name;
+      document.getElementById('call-trade').value = opt.dataset.trade;
+    }
+  });
+}
+
+async function manualCall() {
+  const leadId = document.getElementById('call-lead-select').value || 'manual-' + Date.now();
+  const phoneNumber = document.getElementById('call-phone').value;
+  if (!phoneNumber) { alert('Phone number is required'); return; }
+  const callType = document.getElementById('call-type').value;
+  const trade = document.getElementById('call-trade').value;
+  const data = await api('/api/call', { method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      leadId, phoneNumber, trade, callType,
+      leadInfo: { ownerName: document.getElementById('call-lead-name').value || 'there', trade }
+    })
+  });
+  if (data.error) { alert(data.error); return; }
+  document.getElementById('active-call-display').style.display = 'block';
+  document.getElementById('ac-name').textContent = document.getElementById('call-lead-name').value || phoneNumber;
+  document.getElementById('ac-id').textContent = data.callId;
+  document.getElementById('ac-type').textContent = callType;
+  document.getElementById('ac-cost').textContent = '$0.15 (est.)';
+  let sec = 0;
+  const timer = setInterval(() => { sec++; document.getElementById('ac-duration').textContent = Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0'); }, 1000);
+  setTimeout(() => clearInterval(timer), 360000);
+}
+
+// ========== SETTINGS TAB ==========
+async function loadSettings() {
+  const config = await api('/api/config');
+  // Agency settings
+  document.getElementById('agency-config').innerHTML = `
+    <div class="form-row">
+      <div><label>Agency Name</label><div style="font-size:1rem">${esc(config.agencyName)}</div></div>
+      <div><label>Agent Name</label><div style="font-size:1rem">${esc(config.agentName||'Alex')}</div></div>
+      <div><label>Transfer Phone</label><div style="font-size:1rem">${esc(config.transferPhoneNumber||'Not set')}</div></div>
+    </div>`;
+
+  // API keys
+  document.getElementById('apikey-status').innerHTML = config.services.map(s => `
+    <div class="status-indicator" style="margin-bottom:4px">
+      <span class="dot ${s.configured ? 'dot-ok' : 'dot-err'}"></span>
+      <strong>${s.name}:</strong> ${s.configured ? 'Configured' : 'Missing'}
+    </div>`).join('');
+
+  // Connection tests
+  document.getElementById('connection-tests').innerHTML = config.services.map(s => `
+    <button class="btn btn-outline btn-sm" style="margin:4px" onclick="testService('${s.key}')">Test ${s.name}</button>`).join('') + '<div id="test-result" style="margin-top:8px;font-size:.85rem"></div>';
+
+  // URLs
+  document.getElementById('urls-display').innerHTML = `<p><strong>Ngrok URL:</strong> ${esc(config.ngrokUrl||'Not set')}</p><p><strong>Vapi Webhook:</strong> ${esc(config.ngrokUrl||'http://localhost:'+(config.port||3000))}/webhook/vapi</p>`;
+}
+
+async function testService(service) {
+  const el = document.getElementById('test-result');
+  el.textContent = 'Testing...';
+  try {
+    const data = await api('/api/test/' + service);
+    el.innerHTML = `<span style="color:${data.status==='ok'?'#00c853':'#d32f2f'}">${data.status==='ok'?'✓':'✗'} ${data.message}</span>`;
+  } catch(e) {
+    el.innerHTML = '<span style="color:#d32f2f">✗ Request failed</span>';
+  }
+}
+
+// ========== COSTS TAB ==========
+async function loadCosts() {
+  const data = await api('/api/costs');
+  document.getElementById('cost-today').textContent = '$' + (data.daily?.total||0).toFixed(2);
+  document.getElementById('cost-total').textContent = '$' + (data.total?.total||0).toFixed(2);
+  document.getElementById('cost-today-calls').textContent = data.daily?.entryCount||0;
+  document.getElementById('cost-total-calls').textContent = data.total?.entryCount||0;
+}
+
+// ========== INIT ==========
+async function init() {
+  initTradeFilters();
+  await loadLeads();
+  await loadCampaignStatus();
+  await loadSettings();
+  await loadCosts();
+  // Auto-refresh costs every 30s
+  setInterval(loadCosts, 30000);
+  // Auto-refresh leads every 30s
+  setInterval(loadLeads, 30000);
+}
+init();
+</script>
+</body>
+</html>
