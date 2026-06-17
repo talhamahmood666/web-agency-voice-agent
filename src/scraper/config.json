@@ -1,0 +1,26 @@
+{
+  "trades": {
+    "plumber": ["plumber", "plumbing company", "plumbing service"],
+    "electrician": ["electrician", "electrical contractor", "electrical service"],
+    "hvac": ["hvac", "heating and cooling", "air conditioning repair"],
+    "roofer": ["roofing company", "roofer", "roofing contractor"],
+    "landscaper": ["landscaping company", "landscaper", "lawn care service"],
+    "general_contractor": ["general contractor", "home remodeling", "home renovation"]
+  },
+  "states": {
+    "TX": ["Abilene", "Amarillo", "Big Spring", "Brownwood", "Cleburne", "Corsicana", "Del Rio", "Eagle Pass", "Gainesville", "Hereford", "Huntsville", "Jacksonville", "Kerrville", "Lampasas", "Levelland", "Lufkin", "Marble Falls", "Nacogdoches", "Palestine", "Paris", "Plainview", "San Marcos", "Seguin", "Snyder", "Stephenville", "Sulphur Springs", "Sweetwater", "Uvalde", "Vernon", "Weatherford"],
+    "OK": ["Ada", "Altus", "Ardmore", "Bartlesville", "Chickasha", "Claremore", "Duncan", "Durant", "El Reno", "Guymon", "McAlester", "Miami", "Muskogee", "Ponca City", "Sapulpa", "Seminole", "Shawnee", "Stillwater", "Tahlequah", "Woodward"],
+    "AR": ["Batesville", "Blytheville", "Camden", "Clarksville", "Forrest City", "Harrison", "Helena", "Hope", "Magnolia", "Malvern", "Mountain Home", "Paragould", "Russellville", "Searcy", "Siloam Springs", "Stuttgart", "Van Buren", "Wynne"],
+    "LA": ["Abbeville", "Bastrop", "Bogalusa", "Crowley", "DeRidder", "Eunice", "Jennings", "Leesville", "Minden", "Morgan City", "Natchitoches", "New Iberia", "Opelousas", "Rayne", "Ruston", "Thibodaux", "Ville Platte", "West Monroe"],
+    "MS": ["Batesville", "Brookhaven", "Canton", "Clarksdale", "Cleveland", "Columbus", "Corinth", "Greenville", "Grenada", "Laurel", "McComb", "Natchez", "Ocean Springs", "Oxford", "Picayune", "Starkville", "Vicksburg", "West Point"],
+    "AL": ["Albertville", "Alexander City", "Anniston", "Athens", "Cullman", "Daleville", "Demopolis", "Enterprise", "Eufaula", "Fort Payne", "Gadsden", "Jasper", "Opelika", "Ozark", "Scottsboro", "Selma", "Sylacauga", "Talladega", "Troy", "Tuskegee"],
+    "TN": ["Athens", "Cleveland", "Columbia", "Cookeville", "Crossville", "Dayton", "Dickson", "Dyersburg", "Elizabethton", "Greeneville", "Lawrenceburg", "Lebanon", "Martin", "McMinnville", "Morristown", "Paris", "Shelbyville", "Tullahoma"],
+    "GA": ["Bainbridge", "Carrollton", "Cedartown", "Cordele", "Cornelia", "Covington", "Douglas", "Dublin", "Eastman", "Fitzgerald", "Fort Valley", "Jesup", "LaGrange", "Milledgeville", "Moultrie", "Perry", "Sandersville", "Statesboro", "Thomaston", "Tifton", "Vidalia", "Waycross"],
+    "SC": ["Aiken", "Beaufort", "Bennettsville", "Camden", "Cheraw", "Clinton", "Conway", "Darlington", "Easley", "Gaffney", "Georgetown", "Hartsville", "Laurens", "Marion", "Newberry", "Orangeburg", "Seneca", "Union", "Walterboro"],
+    "NC": ["Albemarle", "Asheboro", "Boone", "Eden", "Elizabeth City", "Forest City", "Hendersonville", "Kings Mountain", "Kinston", "Laurinburg", "Lumberton", "Marion", "Morganton", "Mount Airy", "Reidsville", "Roanoke Rapids", "Rockingham", "Sanford", "Shelby", "Statesville", "Waynesville"]
+  },
+  "excludedDomains": ["facebook.com", "yelp.com", "yellowpages.com", "bbb.org", "homeadvisor.com", "angi.com", "angie.com", "angieslist.com", "nextdoor.com", "thumbtack.com", "mapquest.com", "superpages.com", "manta.com", "buildzoom.com", "houzz.com", "bark.com", "porch.com", "wix.com", "squarespace.com", "godaddy.com", "weebly.com", "wordpress.com", "hostinger.com"],
+  "minReviews": 3,
+  "delayBetweenRequests": 2000,
+  "maxResultsPerQuery": 20
+}

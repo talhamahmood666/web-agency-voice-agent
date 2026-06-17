@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "scrape": "ts-node src/scraper/runner.ts",
+    "import-leads": "ts-node src/scraper/import.ts"
   },
   "dependencies": {
     "@types/multer": "^2.1.0",

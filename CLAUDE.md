@@ -43,6 +43,11 @@ src/
   memory/
     mem0Client.ts                - Mem0Client (API + local fallback)
     leadMemory.ts                - getLeadContext, saveLeadMemory
+  scraper/
+    config.json                  - Trades, cities, excluded domains, API settings
+    scraper.ts                   - GooglePlacesScraper (Text Search + Place Details)
+    runner.ts                    - CLI runner (--trades, --states, --max-leads, --dry-run)
+    import.ts                    - Import scraped CSV into LeadStore
 public/
   index.html                     - Dashboard UI (5 tabs: Leads, Campaign, Call, Settings, Costs)
 knowledge-base/
