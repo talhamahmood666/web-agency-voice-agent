@@ -2,6 +2,7 @@ import logger from '../utils/logger';
 import { VapiToolCall, VapiToolResponse, ToolHandler } from './types';
 import { bookMeeting } from './bookMeeting';
 import { sendEmail } from './sendEmail';
+import { sendSMS } from './sendSMS';
 import { saveMemory } from './saveMemory';
 import { logOptOut } from './logOptOut';
 import { transferToHuman } from './transferToHuman';
@@ -9,6 +10,7 @@ import { transferToHuman } from './transferToHuman';
 export const toolRouter: Record<string, ToolHandler> = {
   book_meeting: bookMeeting,
   send_email: sendEmail,
+  send_sms: sendSMS,
   save_memory: saveMemory,
   log_opt_out: logOptOut,
   transfer_to_human: transferToHuman,

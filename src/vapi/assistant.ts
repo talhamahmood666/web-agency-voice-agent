@@ -12,7 +12,7 @@ export function buildAssistantConfig(
 ): Record<string, unknown> {
   const systemPrompt = buildSystemPrompt(lead, callType, mem0Context);
   const agentName = env.AGENT_NAME || 'Alex';
-  const firstMessage = getFirstMessage(callType, lead.ownerName, agentName);
+  const firstMessage = getFirstMessage(callType, lead.ownerName, agentName, lead.trade, lead.city);
 
   const config: Record<string, unknown> = {
     name: `Creed Web Designs - ${lead.trade} - ${lead.businessName}`,
@@ -45,6 +45,14 @@ export function buildAssistantConfig(
     endCallFunctionEnabled: true,
     maxDurationSeconds: 300,
     silenceTimeoutSeconds: 30,
+    assistantOverrides: {
+      responseLatencyMs: 800,
+      silenceTimeoutSeconds: 30,
+      maxDurationSeconds: 300,
+      endCallFunctionEnabled: true,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+    },
   };
 
   return config;
@@ -53,17 +61,42 @@ export function buildAssistantConfig(
 /**
  * Generate the first message based on call type.
  */
-function getFirstMessage(callType: CallType, ownerName: string, agentName: string): string {
+function getFirstMessage(
+  callType: CallType,
+  ownerName: string,
+  agentName: string,
+  trade: string,
+  city: string
+): string {
+  const firstName = ownerName.split(' ')[0] || ownerName;
+  const tradeWork = getTradeWork(trade);
+
   switch (callType) {
     case 'cold_call':
-      return `Hi, is this ${ownerName}?`;
+      return `Hey ${firstName}, I was calling to get an estimate on some ${tradeWork} but I couldn't find your website anywhere. Do you guys even have one or is that on purpose?`;
     case 'follow_up':
-      return `Hey ${ownerName}, this is ${agentName} from Creed Web Designs — we spoke the other day about your website. Got a minute?`;
+      return `Hey ${firstName}, it's ${agentName} from Creed Web Designs. I sent you that site link a little bit ago, were you able to check it out at all?`;
     case 'voicemail':
-      return `Hi ${ownerName}, this is ${agentName} from Creed Web Designs. I help ${ownerName}'s type of business get found on Google — wanted to see if you'd be open to a quick chat. I'll send you an email too. No need to call back, just keep an eye out. Thanks!`;
+      return `Hey ${firstName}, it's ${agentName} from Creed Web Designs. I actually built you guys a website, I was gonna text you the link but wanted to let you know it's coming so you don't think it's spam or something. I'll shoot it over in a sec. Have a good one.`;
     default:
-      return `Hi, is this ${ownerName}?`;
+      return `Hey ${firstName}, I was calling to get an estimate on some ${tradeWork} but I couldn't find your website anywhere. Do you guys even have one or is that on purpose?`;
   }
+}
+
+/**
+ * Map trade type to the kind of work they do (for the opener).
+ */
+function getTradeWork(trade: string): string {
+  const map: Record<string, string> = {
+    plumber: 'plumbing work',
+    electrician: 'electrical work',
+    hvac: 'HVAC work',
+    roofer: 'roofing work',
+    landscaper: 'landscaping',
+    general_contractor: 'contracting work',
+    other: 'work',
+  };
+  return map[trade] || 'work';
 }
 
 /**
@@ -123,6 +156,31 @@ function buildToolDefinitions(): Array<Record<string, unknown>> {
             },
           },
           required: ['leadId', 'emailAddress', 'templateType'],
+        },
+      },
+    },
+    {
+      type: 'function',
+      function: {
+        name: 'send_sms',
+        description: 'Text the demo website link to the prospect so they can see it on their phone.',
+        parameters: {
+          type: 'object',
+          properties: {
+            leadId: {
+              type: 'string',
+              description: 'The unique identifier for the lead.',
+            },
+            phoneNumber: {
+              type: 'string',
+              description: 'The phone number to send the SMS to.',
+            },
+            message: {
+              type: 'string',
+              description: 'The text message content to send.',
+            },
+          },
+          required: ['leadId', 'phoneNumber', 'message'],
         },
       },
     },

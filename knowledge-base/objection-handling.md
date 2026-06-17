@@ -1,87 +1,63 @@
 # Objection Handling Reference
 
-Pattern: **Acknowledge → Reframe → Pivot to Meet.** Never argue. Never push. Leave the door open.
+Pattern: **Acknowledge casually → Reframe naturally → Pivot to sending the link.** Never sound scripted. Never push on a hard no.
 
 ---
 
-## "I'm busy" / "Not a good time"
-**Acknowledge:** Totally get it — you're running a business.
-**Reframe:** A better online presence actually saves you time by filtering out tire-kickers and bringing in serious customers.
-**Pivot:** Can I grab 15 minutes next week? Tuesday or Thursday?
+## "I'm busy right now"
+"Oh yeah no totally, I won't keep you. When's a better time to catch you? I can call back whenever works."
+
+---
+
+## "I'm not interested"
+"No that's totally fine. I mean the site's already built so if you ever wanna take a look at it no pressure. Want me to just text you the link real quick and you can check it out whenever?"
+
+---
+
+## "How much did you say?"
+"It's free. The only catch is it's $1,500 if you like it. And I mean I know local businesses can't spend a fortune on a website, that's why I kept the price in reach. Plus you get to see the whole thing before you pay anything so there's literally zero risk."
 
 ---
 
 ## "I already have a website"
-**Acknowledge:** Nice, you're ahead of most.
-**Reframe:** The real question is whether it's bringing in customers. Most trade websites are online business cards — they look fine but nobody finds them on Google.
-**Pivot:** Want me to take a quick look? Free, no strings. You might already be in great shape.
+"Oh really? My bad, when I looked you up on Google I couldn't find one. What's the URL? I mean either way I already built the site so if you wanna compare them side by side I can send it over, might give you some ideas."
 
 ---
 
-## "How much does it cost?"
-**Acknowledge:** Fair question — I'd want to know too.
-**Reframe:** Most [trade]s are $1,100-$1,500 setup then $300/month. For context, generalist agencies charge 3-5x that. We keep costs low by specializing in trades.
-**Pivot:** The exact number depends on what you need. That's what the free consultation is for — you get a real quote, no surprises.
-
----
-
-## "Not interested"
-**Acknowledge:** Fair enough, I appreciate the honesty.
-**Reframe:** Mind if I ask — happy with where things are, or just not a priority right now?
-**Pivot:** If it's timing, I'll send an email and you can reach out whenever. No pressure.
-
----
-
-## "I tried SEO / marketing before and got burned"
-**Acknowledge:** I hear that way too often. That's frustrating.
-**Reframe:** Most SEO companies take money and do nothing — or use shady tactics that get you penalized. We do real content and optimization with monthly reports so you see exactly what we're doing.
-**Pivot:** What happened with the last company? Knowing helps me tell you honestly if we'd be different.
-
----
-
-## "Send me an email"
-**Acknowledge:** Absolutely.
-**Reframe:** I'll send a quick overview, examples of other [trade] sites, and my calendar link. Takes 2 minutes to skim.
-**Pivot:** What's the best email? Anything specific you'd want me to include?
-
----
-
-## "I get all my work from word of mouth"
-**Acknowledge:** That's how great tradespeople build their business.
-**Reframe:** Referrals have a ceiling though. What happens when your best source retires or a slow season hits? A Google presence catches the people who don't have anyone to ask.
-**Pivot:** It's not either/or. Keep your referrals AND show up when someone Googles "[trade] near me" at 8 PM. Worth 15 minutes?
+## "I get enough work from word of mouth"
+"Yeah no that's great honestly. Most of the guys I work with started that way too. The website's more like, you know, when someone gets your name from a buddy and then Googles you and there's nothing there. That's where you're losing people you don't even know about."
 
 ---
 
 ## "Let me think about it"
-**Acknowledge:** Of course, take your time.
-**Reframe:** The consultation is free and zero obligation. Worst case, you get a second opinion from someone who looks at this stuff daily.
-**Pivot:** I'll send the email now and check back in a week. Or we knock out the consultation now — only 20 minutes.
+"Yeah for sure take your time. Want me to just shoot you the link so you can look at it on your own? No follow up calls or anything, just check it out when you get a chance."
 
 ---
 
-## "I need to talk to my wife / partner"
-**Acknowledge:** Makes total sense — big decisions should involve both of you.
-**Reframe:** The best way to make that conversation productive is to have real information. The consultation gives you something concrete to discuss.
-**Pivot:** Want to do the consult with both of you on the call? Or I'll send info and you two discuss — your call.
+## "I need to talk to my wife/partner about it"
+"Oh yeah hundred percent, that makes sense. How about I just send you the link and you guys can look at it together? Way easier than me trying to explain it over the phone."
 
 ---
 
-## "I don't trust online marketing"
-**Acknowledge:** I don't blame you. Lots of shady operators out there.
-**Reframe:** We're different: trades-only, month-to-month, no contract, you own the site, and I can show real examples from other [trade]s.
-**Pivot:** Not asking for commitment. Just a 20-minute Meet where I show you exactly what we'd do. If it's not a fit, no hard feelings.
+## "I tried a website before and it didn't work"
+"Yeah I hear that a lot honestly. Most of the time it's because the site was just sitting there not actually set up to show up on Google. That's kind of the whole point of what I do, it's not just a website it's built to actually get you found. But yeah take a look at it first and see what you think."
 
 ---
 
-## "My buddy / nephew does my website"
-**Acknowledge:** That's great — having someone who knows you is a plus.
-**Reframe:** The question is whether they're doing ongoing SEO and GBP work, or just keeping the site running. Most friend-built sites just sit there — no ranking, no active lead generation.
-**Pivot:** No need to change if you're happy. But if you're curious whether the site is actually bringing in leads, I'll take a look for free.
+## "Send me an email"
+"Yeah for sure. What's the best email? I'll send it right now with the link to the site so you can actually see it."
 
 ---
 
-## "I'm already working with someone"
-**Acknowledge:** Got it — how's it going with them?
-**Reframe:** If it's going great, stick with them. If there are things you wish were better — communication, results, price — that's where we might be worth a conversation.
-**Pivot:** No hard sell. Happy to be a second set of eyes if you ever want one.
+## "How do I know this isn't a scam?"
+"No yeah that's totally fair. I mean you can literally see the finished website before you pay a dime. I'm not asking for any money upfront or anything. Just take a look at it, if it's not for you no hard feelings."
+
+---
+
+## "My buddy does my website stuff"
+"Oh nice, yeah no that's cool. I mean the site's already done so if you wanna show it to him too that's fine. Sometimes it's good to just have something to compare against you know?"
+
+---
+
+## "I don't need a website"
+"Well I mean I don't know if you need one or not but one of my partners landed a $30,000 job last month just because of a professional website I built him and he gets constant leads now. But if that doesn't work in your scenario I can totally understand."

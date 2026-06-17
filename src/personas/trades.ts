@@ -1,17 +1,17 @@
 import { TradePersona, TradeType } from './types';
 
 const OBJECTION_TEMPLATES: Record<string, string> = {
-  busy: 'Totally get it — you\'re slammed. That\'s actually why I\'m calling. A better website means fewer tire-kicker calls and more booked jobs. Can I grab 15 minutes next week to show you how that works?',
+  busy: "Oh yeah no totally, I won't keep you. When's a better time to catch you? I can call back whenever works.",
   have_website:
-    'Nice! Having one is step one. The question is whether it\'s actually bringing in new customers. Most I see in {trade} are basically online business cards — they don\'t rank on Google or turn visitors into calls. Want me to take a quick look and give you my honest take?',
+    "Oh really? My bad, when I looked you up on Google I couldn't find one. What's the URL? I mean either way I already built the site so if you wanna compare them side by side I can send it over, might give you some ideas.",
   how_much:
-    'It depends on what you need, but for most {trade}s we\'re looking at $1,100 to $1,500 to get everything set up, then $300 a month after that. Honestly though, I\'d rather learn about your business first before throwing numbers around — that\'s what the free consultation is for. What day works better — Tuesday or Thursday?',
+    "It's free. The only catch is it's $1,500 if you like it. And I mean I know local businesses can't spend a fortune on a website, that's why I kept the price in reach. Plus you get to see the whole thing before you pay anything so there's literally zero risk.",
   not_interested:
-    'Fair enough. Mind if I ask — is it that you\'re happy with where things are at, or just not a priority right now? Either way I\'ll respect it.',
+    "No that's totally fine. I mean the site's already built so if you ever wanna take a look at it no pressure. Want me to just text you the link real quick and you can check it out whenever?",
   tried_seo:
-    'Ah, you got burned. Happens way too often in this space. Can I ask what happened? A lot of the time it\'s not that SEO doesn\'t work — it\'s that they took your money and did nothing. We do things differently — real before-and-after results, not promises.',
+    "Yeah I hear that a lot honestly. Most of the time it's because the site was just sitting there not actually set up to show up on Google. That's kind of the whole point of what I do, it's not just a website it's built to actually get you found. But yeah take a look at it first and see what you think.",
   send_email:
-    'Sure thing, I can send something over. Just so you know what to look for — it\'ll have a couple examples of other {trade} sites we\'ve done and a link to grab time on my calendar if you want to chat more. What\'s the best email for you?',
+    "Yeah for sure. What's the best email? I'll send it right now with the link to the site so you can actually see it.",
 };
 
 const trades: Record<TradeType, TradePersona> = {

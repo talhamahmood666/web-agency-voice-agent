@@ -2,47 +2,35 @@
 
 ## Who We Are
 
-Creed Web Designs builds professional websites and manages local SEO for service businesses. We specialize exclusively in trades — plumbers, electricians, HVAC technicians, roofers, landscapers, and general contractors. We don't work with restaurants, e-commerce stores, or tech startups. We know your industry because it's the only industry we serve.
+Creed Web Designs builds professional websites for local service businesses. We specialize exclusively in trades — plumbers, electricians, HVAC technicians, roofers, landscapers, and general contractors. We know your industry because it's the only industry we serve.
 
 ## What We Do
 
-Three things, tightly integrated:
-
-1. **Custom Website** — A fast, modern site built specifically for your trade and your city. Not a template. Every page is designed to convert visitors into phone calls or quote requests.
-
-2. **Local SEO** — We optimize your site to rank on Google for the searches your customers actually make: "[trade] near me," "[trade] in [city]," and similar high-intent terms. This includes on-page SEO, local citations, and monthly content updates.
-
-3. **Google Business Profile Management** — We set up, optimize, and actively manage your GBP listing. Weekly posts, review responses, photo updates, and Q&A monitoring. An active GBP is often the difference between showing up in the local 3-pack or being invisible.
+We build fast, modern websites tailored specifically for your trade and your city. Every site is custom — not a template. The site is designed to show up on Google when people search for what you do, so you get more calls, more quotes, and more booked jobs.
 
 ## How It Works
 
-**Step 1:** Free 20-minute Google Meet consultation. We learn about your business, look at your current online presence, and give you honest feedback on what's working and what isn't.
+1. **You tell us about your business** — We get your details from Google and your existing online presence, then build a complete custom website for you. You don't have to write anything or do any work on your end.
 
-**Step 2:** If it's a fit, we have a kickoff call where we gather your preferences, photos, service details, and branding. You don't need to write anything — we handle all the content.
+2. **You see the finished site before paying anything** — The website is built and live before you spend a dime. You get to look at the whole thing, make sure you like it, and only then decide if you want to buy it.
 
-**Step 3:** Your site goes live within 5-7 business days. We handle everything: design, development, content, hosting setup, and Google Business Profile optimization.
-
-**Step 4:** Once live, the $300/month retainer kicks in. We monitor rankings, update content, manage your GBP, send you a monthly performance report, and stay available for any changes or questions.
+3. **If you like it, it's $1,500** — One-time payment. The site is yours. Domain in your name, content is yours, no ongoing fees unless you want additional work later.
 
 ## Pricing
 
-- **One-time setup:** $1,100 to $1,500, depending on scope. Most projects fall around $1,200. This covers design, development, content writing, and initial SEO setup.
-- **Monthly retainer:** $300/month. Month-to-month. No contract. This covers ongoing SEO, GBP management, hosting, content updates, and monthly reporting.
+- **$1,500 one-time** — For the full custom website, built and live before you pay.
+- **No upfront cost** — You see the finished product before any payment. Zero risk.
+- **No contracts** — The site is yours. No monthly fees, no lock-in.
 
-For context: most generalist agencies charge $3,000 to $8,000+ for a similar website, then $500-$1,500/month for SEO. We keep costs low because we specialize — we've built enough trade websites that we're efficient, and we don't have the overhead of a big agency.
+For context: most agencies charge $3,000 to $8,000+ for a similar website. We keep costs low because we specialize in trades and we're efficient at what we do.
 
-## What the Retainer Includes
+## You Own Everything
 
-- Google ranking monitoring for your target keywords
-- Weekly Google Business Profile posts and updates
-- Review response management (we flag reviews for your input before responding)
-- Website content updates and seasonal adjustments
-- Monthly performance report showing calls, form submissions, and ranking changes
-- Hosting, domain management, SSL certificate, and security updates
+- Domain is registered in your name
+- All content and photos are yours
+- If you ever want changes later, we're available — but nothing is required
+- No hidden fees, no auto-renew, no fine print
 
-## The Fine Print
+## We Only Work With Service Businesses
 
-- **No contracts.** Month-to-month. Cancel anytime with 30 days notice.
-- **You own your website.** The domain is in your name. The content is yours. If you ever leave, we'll help you transition smoothly.
-- **We only work with service businesses.** If you're not in the trades, we're not the right fit — and we'll tell you that up front.
-- **Results take time.** SEO is not instant. Most clients see meaningful ranking improvements within 60-90 days. Some keywords move faster, some slower. We report honestly on progress every month.
+If you're not in the trades, we're not the right fit — and we'll tell you that up front. We focus on plumbers, electricians, HVAC, roofers, landscapers, and contractors because that's what we know.
