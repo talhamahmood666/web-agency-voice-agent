@@ -26,6 +26,9 @@ export function buildAssistantConfig(
           content: systemPrompt,
         },
       ],
+      extra_body: {
+        thinking: { type: 'disabled' },
+      },
     },
     voice: {
       provider: '11labs',
