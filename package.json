@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "scrape": "ts-node src/scraper/runner.ts",
-    "import-leads": "ts-node src/scraper/import.ts"
+    "import-leads": "ts-node src/scraper/import.ts",
+    "generate-demos": "ts-node src/demos/runner.ts"
   },
   "dependencies": {
     "@types/multer": "^2.1.0",

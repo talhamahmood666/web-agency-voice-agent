@@ -44,11 +44,17 @@ src/
     mem0Client.ts                - Mem0Client (API + local fallback)
     leadMemory.ts                - getLeadContext, saveLeadMemory
   scraper/
-    config.json                  - Trades, cities, excluded domains, API settings
-    scraper.ts                   - GooglePlacesScraper (Text Search + Place Details)
+    config.json                  - Trades (6), states (10), cities (214), excluded domains (23)
+    scraper.ts                   - GooglePlacesScraper (Text Search, Place Details, owner extraction, review age filter, business_status filter)
     runner.ts                    - CLI runner (--trades, --states, --max-leads, --dry-run)
-    import.ts                    - Import scraped CSV into LeadStore
+    import.ts                    - Import scraped CSV into LeadStore (phone dedup)
+  demos/
+    template.html                - Professional trade website template (config-driven, LocalBusiness JSON-LD, responsive)
+    generator.ts                 - generateDemoConfig, generateDemoPage, generateAllDemos (auto-color, auto-services, auto-area)
+    runner.ts                    - CLI: generate demo pages for all "new" leads
 public/
+  demos/                         - Generated demo HTML files + index.json
+    index.html                   - Dashboard UI (5 tabs: Leads, Campaign, Call, Settings, Costs)
   index.html                     - Dashboard UI (5 tabs: Leads, Campaign, Call, Settings, Costs)
 knowledge-base/
   agency-services.md             - Creed Web Designs service details

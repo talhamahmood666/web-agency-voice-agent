@@ -58,13 +58,18 @@ async function main() {
   const stats = await scraper.run(opts.trades, opts.states, opts.maxLeads, opts.dryRun);
 
   console.log('\n=== Scrape Complete ===');
-  console.log(`Total queries:     ${stats.totalQueries}`);
-  console.log(`Total results:     ${stats.totalResults}`);
-  console.log(`New leads:         ${stats.newLeads}`);
-  console.log(`Dupes filtered:    ${stats.dupesFiltered}`);
-  console.log(`No-phone filtered: ${stats.noPhoneFiltered}`);
-  console.log(`Has-website filtered: ${stats.hasWebsiteFiltered}`);
-  console.log(`Est. API cost:     $${stats.estimatedCost.toFixed(2)}`);
+  console.log(`Total queries:       ${stats.totalQueries}`);
+  console.log(`Total results:       ${stats.totalResults}`);
+  console.log(`New leads:           ${stats.newLeads}`);
+  console.log(`Owners found:        ${stats.ownersFound}`);
+  console.log(`Dupes filtered:      ${stats.dupesFiltered}`);
+  console.log(`Filtered - no phone: ${stats.filtered.noPhone}`);
+  console.log(`Filtered - website:  ${stats.filtered.hasRealWebsite}`);
+  console.log(`Filtered - inactive: ${stats.filtered.inactive}`);
+  console.log(`Filtered - closed:   ${stats.filtered.closed}`);
+  console.log(`Filtered - <reviews: ${stats.filtered.tooFewReviews}`);
+  console.log(`Filtered - no recent: ${stats.filtered.noRecentReviews}`);
+  console.log(`Est. API cost:       $${stats.estimatedCost.toFixed(2)}`);
 
   if (!opts.dryRun && stats.newLeads > 0) {
     console.log(`\nLeads saved to data/scraped_leads.csv`);

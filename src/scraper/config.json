@@ -21,6 +21,7 @@
   },
   "excludedDomains": ["facebook.com", "yelp.com", "yellowpages.com", "bbb.org", "homeadvisor.com", "angi.com", "angie.com", "angieslist.com", "nextdoor.com", "thumbtack.com", "mapquest.com", "superpages.com", "manta.com", "buildzoom.com", "houzz.com", "bark.com", "porch.com", "wix.com", "squarespace.com", "godaddy.com", "weebly.com", "wordpress.com", "hostinger.com"],
   "minReviews": 3,
+  "maxReviewAgeDays": 365,
   "delayBetweenRequests": 2000,
   "maxResultsPerQuery": 20
 }

@@ -416,6 +416,35 @@ app.get('/api/test/:service', async (req, res) => {
   }
 });
 
+// --- API: Demos ---
+
+// GET /api/demos — return the demo index
+app.get('/api/demos', (_req, res) => {
+  const indexPath = path.resolve(__dirname, '../public/demos/index.json');
+  if (!fs.existsSync(indexPath)) {
+    res.json({ demos: [], message: 'No demos generated yet. Run npm run generate-demos.' });
+    return;
+  }
+  const raw = fs.readFileSync(indexPath, 'utf-8');
+  res.json({ demos: JSON.parse(raw) });
+});
+
+// GET /api/demos/:slug — return demo config for a specific lead
+app.get('/api/demos/:slug', (req, res) => {
+  const indexPath = path.resolve(__dirname, '../public/demos/index.json');
+  if (!fs.existsSync(indexPath)) {
+    res.status(404).json({ error: 'Demo index not found. Run npm run generate-demos first.' });
+    return;
+  }
+  const index = JSON.parse(fs.readFileSync(indexPath, 'utf-8')) as Array<{ slug: string }>;
+  const entry = index.find((d) => d.slug === req.params.slug);
+  if (!entry) {
+    res.status(404).json({ error: `Demo "${req.params.slug}" not found.` });
+    return;
+  }
+  res.json(entry);
+});
+
 // --- Tool extraction ---
 
 function extractToolCall(body: Record<string, unknown>): VapiToolCall | null {

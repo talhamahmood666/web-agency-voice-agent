@@ -22,6 +22,7 @@ interface PlaceResult {
   user_ratings_total?: number;
   business_status?: string;
   formatted_address?: string;
+  reviews?: Array<{ author_name?: string; relative_time_description?: string; time?: number }>;
 }
 
 interface ScrapedLead {
@@ -47,13 +48,22 @@ interface ScrapedLead {
   notes: string;
 }
 
+export interface FilterRejection {
+  noPhone: number;
+  hasRealWebsite: number;
+  inactive: number;
+  closed: number;
+  tooFewReviews: number;
+  noRecentReviews: number;
+}
+
 export interface ScrapeStats {
   totalQueries: number;
   totalResults: number;
   newLeads: number;
   dupesFiltered: number;
-  noPhoneFiltered: number;
-  hasWebsiteFiltered: number;
+  filtered: FilterRejection;
+  ownersFound: number;
   estimatedCost: number;
 }
 
@@ -70,158 +80,113 @@ export class GooglePlacesScraper {
     this.seenIds = new Set();
     this.leads = [];
     this.stats = {
-      totalQueries: 0,
-      totalResults: 0,
-      newLeads: 0,
-      dupesFiltered: 0,
-      noPhoneFiltered: 0,
-      hasWebsiteFiltered: 0,
-      estimatedCost: 0,
+      totalQueries: 0, totalResults: 0, newLeads: 0, dupesFiltered: 0,
+      filtered: { noPhone: 0, hasRealWebsite: 0, inactive: 0, closed: 0, tooFewReviews: 0, noRecentReviews: 0 },
+      ownersFound: 0, estimatedCost: 0,
     };
   }
 
-  /** Load previously seen place IDs from file. */
   loadSeenIds(): void {
     if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
     if (fs.existsSync(SEEN_FILE)) {
-      const content = fs.readFileSync(SEEN_FILE, 'utf-8');
-      content.split('\n').forEach((id) => {
-        const trimmed = id.trim();
-        if (trimmed) this.seenIds.add(trimmed);
+      fs.readFileSync(SEEN_FILE, 'utf-8').split('\n').forEach((id) => {
+        if (id.trim()) this.seenIds.add(id.trim());
       });
     }
   }
 
-  /** Save seen place IDs to file. */
   saveSeenIds(): void {
     fs.writeFileSync(SEEN_FILE, Array.from(this.seenIds).join('\n') + '\n', 'utf-8');
   }
 
-  /** Save scraped leads to CSV. */
   saveLeads(): void {
-    const headers = [
-      'id', 'businessName', 'ownerName', 'trade', 'phoneNumber', 'email',
-      'city', 'state', 'hasWebsite', 'websiteUrl', 'googleReviewCount',
-      'googleRating', 'source', 'status', 'callCount', 'lastCallDate',
-      'nextCallDate', 'meetingDate', 'timezone', 'notes',
-    ];
-
+    const headers = ['id','businessName','ownerName','trade','phoneNumber','email','city','state','hasWebsite','websiteUrl','googleReviewCount','googleRating','source','status','callCount','lastCallDate','nextCallDate','meetingDate','timezone','notes'];
     const rows = this.leads.map((l) =>
-      headers
-        .map((h) => {
-          const val = (l as unknown as Record<string, unknown>)[h];
-          if (val === null || val === undefined) return '';
-          const str = String(val);
-          return str.includes(',') ? `"${str}"` : str;
-        })
-        .join(',')
+      headers.map((h) => {
+        const val = (l as unknown as Record<string, unknown>)[h];
+        if (val === null || val === undefined) return '';
+        const str = String(val);
+        return str.includes(',') ? `"${str}"` : str;
+      }).join(',')
     );
-
-    const csv = [headers.join(','), ...rows].join('\n');
-    fs.writeFileSync(OUTPUT_FILE, csv, 'utf-8');
+    fs.writeFileSync(OUTPUT_FILE, [headers.join(','), ...rows].join('\n'), 'utf-8');
   }
 
-  /** Run the scraper. */
-  async run(
-    trades: string[],
-    states: string[],
-    maxLeads: number,
-    dryRun: boolean
-  ): Promise<ScrapeStats> {
+  async run(trades: string[], states: string[], maxLeads: number, dryRun: boolean): Promise<ScrapeStats> {
     this.loadSeenIds();
 
     const queries: Array<{ trade: string; searchTerm: string; city: string; state: string }> = [];
-
     for (const tradeKey of trades) {
-      const searchTerms = (config.trades as Record<string, string[]>)[tradeKey];
-      if (!searchTerms) continue;
       for (const state of states) {
-        const cities = (config.states as Record<string, string[]>)[state];
-        if (!cities) continue;
-        for (const city of cities) {
-          for (const term of searchTerms) {
+        for (const city of (config.states as Record<string, string[]>)[state] || []) {
+          for (const term of (config.trades as Record<string, string[]>)[tradeKey] || []) {
             queries.push({ trade: tradeKey, searchTerm: term, city, state });
           }
         }
       }
     }
 
-    // For dry-run: just print the query plan
     if (dryRun) {
       console.log(`Dry run — would execute ${queries.length} queries:`);
-      const sample = queries.slice(0, 20);
-      for (const q of sample) {
-        console.log(`  "${q.searchTerm} in ${q.city}, ${q.state}" → trade: ${q.trade}`);
-      }
-      if (queries.length > 20) {
-        console.log(`  ... and ${queries.length - 20} more queries`);
-      }
+      queries.slice(0, 20).forEach(q => console.log(`  "${q.searchTerm} in ${q.city}, ${q.state}" → trade: ${q.trade}`));
+      if (queries.length > 20) console.log(`  ... and ${queries.length - 20} more queries`);
       const estCost = queries.length * this.textSearchCost + queries.length * this.detailCost;
       console.log(`\nEstimated API cost: $${estCost.toFixed(2)}`);
       return { ...this.stats, totalQueries: queries.length, estimatedCost: estCost };
     }
 
     for (const q of queries) {
-      if (maxLeads > 0 && this.leads.length >= maxLeads) {
-        console.log(`Reached max leads (${maxLeads}). Stopping.`);
-        break;
-      }
-
+      if (maxLeads > 0 && this.leads.length >= maxLeads) { console.log(`Reached max leads (${maxLeads}). Stopping.`); break; }
       this.stats.totalQueries++;
-      console.log(`[${this.stats.newLeads} leads] Searching: "${q.searchTerm} in ${q.city}, ${q.state}"...`);
 
       try {
         const places = await this.textSearch(q.searchTerm, q.city, q.state);
         this.stats.totalResults += places.length;
-
+        const cityReasons: Record<string, number> = { dupes: 0, noPhone: 0, hasRealWebsite: 0, inactive: 0, closed: 0, tooFewReviews: 0, noRecentReviews: 0 };
         let cityNew = 0;
-        let cityDupes = 0;
-        let cityFiltered = 0;
 
         for (const place of places) {
-          // Dedup by place_id
-          if (this.seenIds.has(place.place_id)) {
-            cityDupes++;
-            this.stats.dupesFiltered++;
-            continue;
-          }
+          if (this.seenIds.has(place.place_id)) { cityReasons.dupes++; this.stats.dupesFiltered++; continue; }
           this.seenIds.add(place.place_id);
 
-          // Fetch details
           const details = await this.getPlaceDetails(place.place_id);
           await this.sleep(config.delayBetweenRequests);
 
-          // Filter: must have phone
-          if (!details?.formatted_phone_number) {
-            cityFiltered++;
-            this.stats.noPhoneFiltered++;
-            continue;
-          }
+          // Filter a: business_status must be OPERATIONAL
+          const status = details?.business_status || 'OPERATIONAL';
+          if (status === 'CLOSED_TEMPORARILY') { cityReasons.inactive++; this.stats.filtered.inactive++; continue; }
+          if (status === 'CLOSED_PERMANENTLY') { cityReasons.closed++; this.stats.filtered.closed++; continue; }
 
-          // Filter: no website or excluded domain
+          // Filter b: must have phone
+          if (!details?.formatted_phone_number) { cityReasons.noPhone++; this.stats.filtered.noPhone++; continue; }
+
+          // Filter c: no website or excluded domain
           const website = details.website || '';
           if (website) {
             const domain = extractDomain(website);
             if (domain && !config.excludedDomains.includes(domain)) {
-              // Has a real website — not our target
-              cityFiltered++;
-              this.stats.hasWebsiteFiltered++;
-              continue;
+              cityReasons.hasRealWebsite++; this.stats.filtered.hasRealWebsite++; continue;
             }
           }
 
-          // Filter: min reviews
+          // Filter d: min reviews
           const reviewCount = details.user_ratings_total || 0;
-          if (reviewCount < config.minReviews) {
-            cityFiltered++;
-            continue;
+          if (reviewCount < config.minReviews) { cityReasons.tooFewReviews++; this.stats.filtered.tooFewReviews++; continue; }
+
+          // Filter e: at least one recent review within maxReviewAgeDays
+          if (details.reviews && details.reviews.length > 0) {
+            const cutoff = Date.now() - config.maxReviewAgeDays * 24 * 60 * 60 * 1000;
+            const hasRecent = details.reviews.some(r => (r.time || 0) * 1000 >= cutoff);
+            if (!hasRecent) { cityReasons.noRecentReviews++; this.stats.filtered.noRecentReviews++; continue; }
           }
 
-          // Create lead
+          // Extract owner name
+          const ownerName = extractOwnerName(details.name, details.reviews || []);
+
           const lead: ScrapedLead = {
             id: `gm-${details.place_id}`,
             businessName: details.name || place.name || 'Unknown',
-            ownerName: '',
+            ownerName,
             trade: q.trade,
             phoneNumber: details.formatted_phone_number || '',
             email: '',
@@ -234,93 +199,76 @@ export class GooglePlacesScraper {
             source: 'google_maps',
             status: 'new',
             callCount: 0,
-            lastCallDate: null,
-            nextCallDate: null,
-            meetingDate: null,
+            lastCallDate: null, nextCallDate: null, meetingDate: null,
             timezone: STATE_TZ[q.state] || 'America/Chicago',
-            notes: `Found via "${q.searchTerm} in ${q.city}, ${q.state}"`,
+            notes: ownerName ? `Owner name extracted from Google: ${ownerName}` : '',
           };
 
           this.leads.push(lead);
-          cityNew++;
-          this.stats.newLeads++;
-
+          cityNew++; this.stats.newLeads++;
+          if (ownerName) this.stats.ownersFound++;
           if (maxLeads > 0 && this.leads.length >= maxLeads) break;
         }
 
-        console.log(
-          `  → ${q.searchTerm} in ${q.city}, ${q.state}: ${places.length} results (${cityNew} new, ${cityDupes} dupes, ${cityFiltered} filtered)`
-        );
+        const filterParts = Object.entries(cityReasons).filter(([,v]) => v > 0).map(([k,v]) => `${v} ${k}`).join(', ');
+        console.log(`  → ${q.searchTerm} in ${q.city}: ${places.length} results (${cityNew} new${filterParts ? ', ' + filterParts : ''})`);
       } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.error(`  ✗ Error: ${message}`);
+        console.error(`  ✗ Error: ${error instanceof Error ? error.message : error}`);
       }
-
       await this.sleep(config.delayBetweenRequests);
     }
 
-    // Save outputs
     this.saveLeads();
     this.saveSeenIds();
-    this.stats.estimatedCost =
-      this.stats.totalQueries * this.textSearchCost +
-      this.stats.newLeads * this.detailCost * 2; // ~2 detail calls per new lead
-
+    this.stats.estimatedCost = this.stats.totalQueries * this.textSearchCost + this.stats.newLeads * this.detailCost * 2;
     return this.stats;
   }
 
-  /** Google Places Text Search. */
-  private async textSearch(
-    query: string,
-    city: string,
-    state: string
-  ): Promise<PlaceResult[]> {
-    const fullQuery = encodeURIComponent(`${query} in ${city}, ${state}`);
-    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${fullQuery}&key=${this.apiKey}`;
-
-    const response = await fetch(url);
-    const data = (await response.json()) as {
-      status: string;
-      results?: PlaceResult[];
-      error_message?: string;
-    };
-
-    if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
-      throw new Error(`Places API error: ${data.status}${data.error_message ? ` - ${data.error_message}` : ''}`);
-    }
-
+  private async textSearch(query: string, city: string, state: string): Promise<PlaceResult[]> {
+    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(`${query} in ${city}, ${state}`)}&key=${this.apiKey}`;
+    const data = await fetch(url).then(r => r.json()) as { status: string; results?: PlaceResult[]; error_message?: string };
+    if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') throw new Error(`Places API: ${data.status}${data.error_message ? ` - ${data.error_message}` : ''}`);
     return (data.results || []).slice(0, config.maxResultsPerQuery);
   }
 
-  /** Google Place Details. */
   private async getPlaceDetails(placeId: string): Promise<PlaceResult | null> {
-    const fields = 'name,formatted_phone_number,website,rating,user_ratings_total,business_status,formatted_address';
+    const fields = 'name,formatted_phone_number,website,rating,user_ratings_total,business_status,formatted_address,reviews';
     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&key=${this.apiKey}`;
-
-    const response = await fetch(url);
-    const data = (await response.json()) as {
-      status: string;
-      result?: PlaceResult;
-    };
-
+    const data = await fetch(url).then(r => r.json()) as { status: string; result?: PlaceResult };
     if (data.status !== 'OK') return null;
     return data.result || null;
   }
 
-  private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  getLeads(): ScrapedLead[] {
-    return this.leads;
-  }
+  private sleep(ms: number): Promise<void> { return new Promise(r => setTimeout(r, ms)); }
+  getLeads(): ScrapedLead[] { return this.leads; }
 }
 
+/** Extract domain from URL string. */
 function extractDomain(url: string): string | null {
-  try {
-    const hostname = new URL(url.startsWith('http') ? url : `https://${url}`).hostname;
-    return hostname.replace(/^www\./, '').toLowerCase();
-  } catch {
-    return null;
+  try { return new URL(url.startsWith('http') ? url : `https://${url}`).hostname.replace(/^www\./, '').toLowerCase(); }
+  catch { return null; }
+}
+
+/** Extract owner first name from business name patterns or reviews. */
+function extractOwnerName(businessName: string, reviews: PlaceResult['reviews']): string {
+  // Try business name patterns like "Mike's Plumbing", "Joe Smith HVAC"
+  const nameMatch = businessName.match(/^([A-Z][a-z]+)(?:'s|\s+[A-Z])/);
+  if (nameMatch) return nameMatch[1];
+
+  // Try review author names (common first name patterns)
+  if (reviews && reviews.length > 0) {
+    for (const review of reviews) {
+      const author = review.author_name || '';
+      const parts = author.split(' ');
+      if (parts.length > 0) {
+        const first = parts[0];
+        // Only accept if looks like a real first name (2+ chars, starts with uppercase)
+        if (first.length >= 2 && /^[A-Z][a-z]+$/.test(first)) {
+          return first;
+        }
+      }
+    }
   }
+
+  return '';
 }
