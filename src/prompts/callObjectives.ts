@@ -85,6 +85,10 @@ End call. Do NOT push further on a hard no.
 
 "I don't need a website":
 "Well I mean I don't know if you need one or not but one of my partners landed a $30,000 job last month just because of a professional website I built him and he gets constant leads now. But if that doesn't work in your scenario I can totally understand."
+
+"Profanity/sarcasm/dismissive" (when they cuss you out or mock the offer):
+Laugh briefly and naturally, then say: "Ha yeah no I totally get it. But real talk one of my guys pulled in a $30,000 job last month just because he had a legit website when someone Googled him. I already built yours so you might as well take a look right?"
+If they're still dismissive after the money pivot: "Ha alright man no worries at all. I'll text you the link just in case. Have a good one."
 `;
 }
 
