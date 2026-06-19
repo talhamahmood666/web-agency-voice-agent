@@ -39,18 +39,19 @@ export async function sendSMS(args: Record<string, unknown>): Promise<string> {
     return `SMS sent to ${phoneNumber}. Message: "${message.substring(0, 80)}${message.length > 80 ? '...' : ''}"`;
   }
 
-  try {
-    const twilioMessage = await client.messages.create({
+  // Fire and forget — respond instantly, send SMS in background
+  client.messages
+    .create({
       body: message,
       from: env.TWILIO_PHONE_NUMBER,
       to: phoneNumber,
+    })
+    .then((m) => {
+      logger.info(`[sendSMS] Twilio message sent. SID: ${m.sid}, Status: ${m.status}`);
+    })
+    .catch((err) => {
+      logger.error(`[sendSMS] Twilio background send failed: ${err instanceof Error ? err.message : err}`);
     });
 
-    logger.info(`[sendSMS] Twilio message sent. SID: ${twilioMessage.sid}, Status: ${twilioMessage.status}`);
-    return `SMS sent to ${phoneNumber}. Twilio SID: ${twilioMessage.sid}`;
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.error(`[sendSMS] Twilio send failed: ${errorMessage}`);
-    return `SMS could not be sent to ${phoneNumber}. Error: ${errorMessage.substring(0, 100)}`;
-  }
+  return `SMS sent to ${phoneNumber}.`;
 }
