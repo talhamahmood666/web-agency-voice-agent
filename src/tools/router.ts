@@ -14,6 +14,11 @@ export const toolRouter: Record<string, ToolHandler> = {
   save_memory: saveMemory,
   log_opt_out: logOptOut,
   transfer_to_human: transferToHuman,
+  end_call: async (args) => {
+    const reason = (args as Record<string, unknown>).reason || 'call complete';
+    logger.info(`[end_call] Call ended. Reason: ${reason}`);
+    return 'Call ended.';
+  },
 };
 
 export async function handleToolCall(toolCall: VapiToolCall): Promise<VapiToolResponse> {

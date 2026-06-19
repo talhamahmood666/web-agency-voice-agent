@@ -248,5 +248,22 @@ function buildToolDefinitions(): Array<Record<string, unknown>> {
         },
       },
     },
+    {
+      type: 'function',
+      function: {
+        name: 'end_call',
+        description: 'End the phone call. Use after saying goodbye.',
+        parameters: {
+          type: 'object',
+          properties: {
+            reason: {
+              type: 'string',
+              description: 'Why the call is ending (e.g. "prospect not interested", "meeting booked", "call complete")',
+            },
+          },
+          required: ['reason'],
+        },
+      },
+    },
   ];
 }
