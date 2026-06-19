@@ -30,10 +30,11 @@ export function buildAssistantConfig(
       tools: buildToolDefinitions(),
     },
     voice: {
-      provider: '11labs',
-      voiceId: env.ELEVENLABS_VOICE_ID,
-      stability: 0.5,
-      similarityBoost: 0.75,
+      provider: 'vapi',
+      voiceId: 'Savannah',
+      version: 2,
+      language: 'en',
+      speed: 1.1,
     },
     transcriber: {
       provider: 'deepgram',
