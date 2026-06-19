@@ -110,7 +110,7 @@ app.post('/webhook/vapi/status', (req, res) => {
 
 app.post('/api/call', async (req, res) => {
   try {
-    const { leadId, phoneNumber, trade, callType, leadInfo } = req.body;
+    const { leadId, phoneNumber, trade, callType, leadInfo, force } = req.body;
 
     if (!leadId || !phoneNumber) {
       res.status(400).json({ error: 'leadId and phoneNumber are required' });
@@ -134,7 +134,7 @@ app.post('/api/call', async (req, res) => {
 
     logger.info(`[api/call] Initiating ${type} call to ${lead.ownerName} at ${phoneNumber}`);
 
-    const result = await callManager.initiateCall(lead, type, phoneNumber);
+    const result = await callManager.initiateCall(lead, type, phoneNumber, undefined, force === true);
 
     if (result.success) {
       res.status(200).json({ callId: result.callId, status: 'initiated' });

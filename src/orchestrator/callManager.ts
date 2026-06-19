@@ -32,7 +32,8 @@ export class CallManager {
     lead: LeadInfo,
     callType: CallType,
     phoneNumber: string,
-    mem0Context?: string
+    mem0Context?: string,
+    force?: boolean
   ): Promise<{ callId: string; success: boolean; error?: string }> {
     // Check opt-out list
     if (optOutList.has(lead.id)) {
@@ -57,13 +58,16 @@ export class CallManager {
 
     // Check callable time (use a reasonable default timezone if unknown)
     const timezone = getLeadTimezone(lead.state);
-    if (!isCallableTime(timezone)) {
+    if (!force && !isCallableTime(timezone)) {
       logger.warn(`[CallManager] Outside callable hours for ${timezone}`);
       return {
         callId: '',
         success: false,
         error: `Current time is outside callable hours (8 AM - 6 PM) in ${timezone}.`,
       };
+    }
+    if (force) {
+      logger.warn('[CallManager] Force mode: skipping callable hours check');
     }
 
     try {
