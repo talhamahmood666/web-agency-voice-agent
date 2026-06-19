@@ -448,6 +448,8 @@ app.get('/api/demos/:slug', (req, res) => {
 // --- Tool extraction ---
 
 function extractToolCall(body: Record<string, unknown>): VapiToolCall | null {
+  logger.debug('[extractToolCall] body keys:', Object.keys(body), 'message.type:', (body.message as Record<string, unknown> | undefined)?.type);
+
   if (body.type === 'function' && body.function && typeof body.function === 'object') {
     return body as unknown as VapiToolCall;
   }
@@ -488,6 +490,28 @@ function extractToolCall(body: Record<string, unknown>): VapiToolCall | null {
       const first = (msg.toolCalls as Array<Record<string, unknown>>)[0];
       if (first.type === 'function' && first.function) {
         return first as unknown as VapiToolCall;
+      }
+    }
+
+    // Current Vapi format: message.type === 'tool-calls' with toolCallList
+    if (
+      msg.type === 'tool-calls' &&
+      Array.isArray(msg.toolCallList) &&
+      (msg.toolCallList as Array<Record<string, unknown>>).length > 0
+    ) {
+      const first = (msg.toolCallList as Array<Record<string, unknown>>)[0];
+      if (first.type === 'function' && first.function) {
+        const fn = first.function as Record<string, unknown>;
+        // Vapi sends arguments as a JSON string — parse if needed
+        const parsedArgs =
+          typeof fn.arguments === 'string' ? (JSON.parse(fn.arguments as string) as Record<string, unknown>) : (fn.arguments as Record<string, unknown>);
+        return {
+          type: 'function',
+          function: {
+            name: (fn.name as string) || '',
+            arguments: parsedArgs || {},
+          },
+        };
       }
     }
   }
