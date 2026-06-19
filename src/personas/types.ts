@@ -28,4 +28,5 @@ export interface LeadInfo {
   websiteUrl: string | null;
   googleReviewCount: number | null;
   googleRating: number | null;
+  demoUrl?: string;
 }

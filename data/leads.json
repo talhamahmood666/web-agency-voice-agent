@@ -1,0 +1,18 @@
+[
+  {
+    "id": "test-001",
+    "businessName": "Texas Pro Plumbing",
+    "ownerName": "Mike",
+    "trade": "plumber",
+    "phoneNumber": "+12076890006",
+    "city": "Temple",
+    "state": "TX",
+    "status": "new",
+    "googleRating": 4.7,
+    "reviewCount": 23,
+    "source": "manual",
+    "createdAt": "2026-06-19T04:16:53.882Z",
+    "callAttempts": 0,
+    "timezone": "America/Chicago"
+  }
+]

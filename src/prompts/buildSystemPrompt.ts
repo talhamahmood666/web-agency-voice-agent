@@ -17,7 +17,7 @@ function getCallObjective(callType: CallType): string {
   }
 }
 
-function buildLeadContext(lead: LeadInfo): string {
+function buildLeadContext(lead: LeadInfo, demoUrl?: string): string {
   const persona = trades[lead.trade];
   const websiteStatus = lead.hasWebsite
     ? `Has a website (${lead.websiteUrl || 'URL unknown'}).`
@@ -30,6 +30,9 @@ function buildLeadContext(lead: LeadInfo): string {
         ? `Google: ${lead.googleReviewCount} reviews.`
         : 'Google reviews: unknown.';
 
+  const effectiveDemoUrl = demoUrl || lead.demoUrl || buildDemoUrl(lead);
+  const demoLine = effectiveDemoUrl ? `\n- **Demo Site URL:** ${effectiveDemoUrl}` : '';
+
   return `
 ## LEAD CONTEXT
 - **Name:** ${lead.ownerName}
@@ -37,7 +40,7 @@ function buildLeadContext(lead: LeadInfo): string {
 - **Trade:** ${lead.trade}
 - **Location:** ${lead.city}, ${lead.state}
 - **Website:** ${websiteStatus}
-- **${reviewInfo}**
+- **${reviewInfo}**${demoLine}
 
 ### Trade Persona: ${persona.trade}
 - **Pain Points:** ${persona.painPoints.join(' | ')}
@@ -57,7 +60,8 @@ ${persona.hooks.slice(1).map((h) => `- ${h}`).join('\n')}
 export function buildSystemPrompt(
   lead: LeadInfo,
   callType: CallType,
-  mem0Context?: string
+  mem0Context?: string,
+  demoUrl?: string
 ): string {
   const sections: string[] = [];
 
@@ -68,7 +72,7 @@ export function buildSystemPrompt(
   sections.push(getCallObjective(callType));
 
   // 3. Lead-specific context (trade persona, hooks, objections)
-  sections.push(buildLeadContext(lead));
+  sections.push(buildLeadContext(lead, demoUrl));
 
   // 4. Mem0 context if available
   if (mem0Context && mem0Context.trim()) {
@@ -82,4 +86,13 @@ ${mem0Context.trim()}
   sections.push(COMPLIANCE_RULES);
 
   return sections.join('\n---\n').trim();
+}
+
+/** Build the demo URL from a lead's business name and city. */
+function buildDemoUrl(lead: LeadInfo): string {
+  const slug = `${lead.businessName}-${lead.city}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return `https://demos-weld-rho.vercel.app/${slug}.html`;
 }

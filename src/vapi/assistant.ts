@@ -10,7 +10,7 @@ export function buildAssistantConfig(
   callType: CallType,
   mem0Context?: string
 ): Record<string, unknown> {
-  const systemPrompt = buildSystemPrompt(lead, callType, mem0Context);
+  const systemPrompt = buildSystemPrompt(lead, callType, mem0Context, lead.demoUrl);
   const agentName = env.AGENT_NAME || 'Alex';
   const firstMessage = getFirstMessage(callType, lead.ownerName, agentName, lead.trade, lead.city);
 
