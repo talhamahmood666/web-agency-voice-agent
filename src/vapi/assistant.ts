@@ -15,7 +15,7 @@ export function buildAssistantConfig(
   const firstMessage = getFirstMessage(callType, lead.ownerName, agentName, lead.trade, lead.city);
 
   const config: Record<string, unknown> = {
-    name: `Creed Web Designs - ${lead.trade} - ${lead.businessName}`,
+    name: `Creed - ${lead.trade} - ${lead.businessName}`.substring(0, 40),
     model: {
       provider: 'custom-llm',
       url: env.DEEPSEEK_API_URL,
@@ -26,9 +26,7 @@ export function buildAssistantConfig(
           content: systemPrompt,
         },
       ],
-      extra_body: {
-        thinking: { type: 'disabled' },
-      },
+      tools: buildToolDefinitions(),
     },
     voice: {
       provider: '11labs',
@@ -42,20 +40,13 @@ export function buildAssistantConfig(
       language: 'en-US',
     },
     serverUrl: `${env.NGROK_URL}/webhook/vapi`,
-    serverMessages: ['tool_calls', 'end_of_call_report', 'status_update'],
-    tools: buildToolDefinitions(),
+    serverMessages: ['tool-calls', 'end-of-call-report', 'status-update'],
     firstMessage,
     endCallFunctionEnabled: true,
     maxDurationSeconds: 300,
     silenceTimeoutSeconds: 30,
-    assistantOverrides: {
-      responseLatencyMs: 800,
-      silenceTimeoutSeconds: 30,
-      maxDurationSeconds: 300,
-      endCallFunctionEnabled: true,
-      backgroundSound: 'office',
-      backchannelingEnabled: true,
-    },
+    backgroundSound: 'office',
+    backchannelingEnabled: true,
   };
 
   return config;
