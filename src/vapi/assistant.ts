@@ -17,15 +17,16 @@ export function buildAssistantConfig(
   const config: Record<string, unknown> = {
     name: `Creed - ${lead.trade} - ${lead.businessName}`.substring(0, 40),
     model: {
-      provider: 'custom-llm',
-      url: env.DEEPSEEK_API_URL,
-      model: env.DEEPSEEK_MODEL,
+      provider: 'groq',
+      model: 'openai/gpt-oss-120b',
       messages: [
         {
           role: 'system',
           content: systemPrompt,
         },
       ],
+      temperature: 0.5,
+      maxTokens: 350,
       tools: buildToolDefinitions(),
     },
     voice: {
